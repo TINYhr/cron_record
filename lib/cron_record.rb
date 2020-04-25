@@ -1,10 +1,16 @@
 require "cron_record/version"
 
+module CronRecord
+  class Error < StandardError; end
+
+  class << self
+    attr_accessor :models
+  end
+
+  self.models = []
+end
+
 require "cron_record/const"
 require "cron_record/item"
 require "cron_record/model"
-
-module CronRecord
-  class Error < StandardError; end
-  # Your code goes here...
-end
+require "cron_record/cronable"

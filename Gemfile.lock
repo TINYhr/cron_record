@@ -51,6 +51,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.9.0)
     rspec-support (3.9.2)
+    sqlite3 (1.4.2)
     thread_safe (0.3.6)
     tzinfo (1.2.7)
       thread_safe (~> 0.1)
@@ -67,6 +68,7 @@ DEPENDENCIES
   pry-byebug
   rake (~> 10.0)
   rspec (~> 3.0)
+  sqlite3
 
 BUNDLED WITH
    2.1.4

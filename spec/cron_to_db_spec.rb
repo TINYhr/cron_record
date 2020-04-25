@@ -1,7 +1,8 @@
 require 'fugit'
-require 'active_record'
 
 class MockModel1 < ActiveRecord::Base
+  extend CronRecord::Cronable
+  cronable :cron
 end
 
 RSpec.describe 'Cron to DB' do
@@ -12,7 +13,7 @@ RSpec.describe 'Cron to DB' do
   end
 
   it "convert cron bit fields to string" do
-    cron =CronRecord::Model.from_bit_fields([0,1,2,2,127])
+    cron = CronRecord::Model.from_bit_fields([0,1,2,2,127])
     expect(cron.to_bits).to eq([0,1,2,2,127])
     expect(cron.to_s).to eq('0 0 1 1 *')
   end
@@ -42,6 +43,18 @@ RSpec.describe 'Cron to DB' do
         expect(cron.match?(test_time)).to eq(true)
         expect(fu.match?(test_time)).to eq(true)
       end
+    end
+  end
+
+  describe 'integrate with ActiveRecord' do
+    it 'runs' do
+      host = MockModel1.new
+      expect(host).to be
+      expect(host.cron).to eq(nil)
+
+      host.cron = '0 0 1 1 *'
+
+      expect(host.cron).to eq('0 0 1 1 *')
     end
   end
 end

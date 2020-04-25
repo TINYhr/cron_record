@@ -15,11 +15,10 @@ module CronRecord
     attr_reader :hour, :day, :month, :day_of_week
 
     def match?(at)
-      target = self.class.parse_time(at)
-      (target[1] & @hour.to_bit) > 0 &&
-        (target[2] & @day.to_bit) > 0 &&
-        (target[3] & @month.to_bit) > 0 &&
-        (target[4] & @day_of_week.to_bit) > 0
+      (BIT_CONVERT[at.hour] & @hour.to_bit) > 0 &&
+        (BIT_CONVERT[at.day] & @day.to_bit) > 0 &&
+        (BIT_CONVERT[at.month] & @month.to_bit) > 0 &&
+        (BIT_CONVERT[at.wday] & @day_of_week.to_bit) > 0
     end
 
     def to_attributes

@@ -1,5 +1,6 @@
 require "bundler/setup"
 require "cron_record"
+require 'active_record'
 
 require 'pry-byebug' if ENV['DEBUG'] == '1'
 
@@ -47,3 +48,20 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 end
+
+ActiveRecord::Base.establish_connection(
+  adapter:  "sqlite3",
+  database: 'spec/db/cron_test.sqlite3',
+  pool: 5,
+  timeout: 5000,
+)
+ActiveRecord::Base.connection.execute('DROP TABLE IF EXISTS mock_model1s;')
+ActiveRecord::Base.connection.execute(<<~SQL)
+  CREATE TABLE mock_model1s (
+    id                BIGINT PRIMARY KEY,
+    cron_hour         BIGINT NOT NULL,
+    cron_day          BIGINT NOT NULL,
+    cron_month        BIGINT NOT NULL,
+    cron_day_of_week  BIGINT NOT NULL
+  );
+SQL
