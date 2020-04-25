@@ -2,12 +2,12 @@ module CronRecord
   class Item
     class << self
       def from_str(item_str)
-        data = if cron_item == '*'
-          range.to_a
+        data = if item_str == '*'
+          self.range.to_a
         else
-          cron_item.split(',').map do |value|
+          item_str.split(',').map do |value|
             value.strip.to_i.tap do |value_i|
-              raise StandardError.new("Invalid #{class.name} value") if range.include?(value_i)
+              raise StandardError.new("Invalid #{self.name} value: [#{value_i}]") unless self.range.include?(value_i)
             end
           end
         end
@@ -23,7 +23,7 @@ module CronRecord
             data << i
           end
 
-          item_bits = item_bits << 1
+          item_bits = item_bits >> 1
           i += 1
         end
 
@@ -68,7 +68,7 @@ module CronRecord
 
   class Month < Item
     def self.range
-      (0..11)
+      (1..12)
     end
   end
 

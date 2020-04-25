@@ -1,3 +1,5 @@
+require 'cron_record/item'
+
 module CronRecord
   module ModelClassMethods
     def query_by_time(at = Time.current)
@@ -15,7 +17,7 @@ module CronRecord
         BIT_CONVERT[at.hour],
         BIT_CONVERT[at.day],
         BIT_CONVERT[at.month],
-        BIT_CONVERT[at.day_of_week]
+        BIT_CONVERT[at.wday]
       ]
     end
 

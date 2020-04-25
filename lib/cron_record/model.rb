@@ -1,3 +1,5 @@
+require 'cron_record/model_class_methods'
+
 module CronRecord
   class Model
     extend CronRecord::ModelClassMethods
@@ -14,10 +16,10 @@ module CronRecord
 
     def match?(at)
       target = self.class.parse_time(at)
-      (target[1] | @hour) > 0 &&
-        (target[2] | @day) > 0 &&
-        (target[3] | @month) > 0 &&
-        (target[4] | @day_of_week) > 0
+      (target[1] & @hour.to_bit) > 0 &&
+        (target[2] & @day.to_bit) > 0 &&
+        (target[3] & @month.to_bit) > 0 &&
+        (target[4] & @day_of_week.to_bit) > 0
     end
 
     def to_attributes
