@@ -1,4 +1,8 @@
 require 'fugit'
+require 'active_record'
+
+class MockModel1 < ActiveRecord::Base
+end
 
 RSpec.describe 'Cron to DB' do
   it "convert cron string to bit fields" do

@@ -7,3 +7,4 @@ gemspec
 
 gem 'pry-byebug'
 gem 'fugit'
+gem 'activerecord'
