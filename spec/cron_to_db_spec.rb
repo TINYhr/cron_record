@@ -47,7 +47,7 @@ RSpec.describe 'Cron to DB' do
   end
 
   describe 'integrate with ActiveRecord' do
-    it 'runs' do
+    it 'has accessor' do
       host = MockModel1.new
       expect(host).to be
       expect(host.cron).to eq(nil)
@@ -55,6 +55,10 @@ RSpec.describe 'Cron to DB' do
       host.cron = '0 0 1 1 *'
 
       expect(host.cron).to eq('0 0 1 1 *')
+    end
+
+    it 'queried by time' do
+      pending('Implement !!!')
     end
   end
 end
