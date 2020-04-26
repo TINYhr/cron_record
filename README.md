@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/anvox/cron_record.svg?branch=master)](https://travis-ci.org/anvox/cron_record)
+
+
 # CronRecord
 
 Allow records act as crontab. Set a `cron` attribute to record with value is a cron string, then and query them out by time.
