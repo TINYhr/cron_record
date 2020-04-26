@@ -1,8 +1,8 @@
 # CronRecord
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/cron_record`. To experiment with that code, run `bin/console` for an interactive prompt.
+Allow records act as crontab. Set a `cron` attribute to record with value is a cron string, then and query them out by time.
 
-TODO: Delete this and the text above, and describe your gem
+__Note:__ Minute argument are passed to match cron pattern but isn't used. This gem run with hourly precise.
 
 ## Installation
 
@@ -22,7 +22,26 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+class MockModel1 < ActiveRecord::Base
+  extend CronRecord::Cronable
+  cronable :cron
+  # Model has columns/attributes below, with type bigint:
+  # attributes['cron_hour']
+  # attributes['cron_day']
+  # attributes['cron_month']
+  # attributes['cron_day_of_week']
+end
+
+# Create
+a = MockModel1.create!(cron: '0 0 1 1 *')
+b = MockModel1.create!(cron: '0 0 2 1 *')
+
+# Query
+moment = Time.new(2020, 1, 1, 0, 0, 0)
+MockModel1.cron_execute_at(moment).all
+#=> a
+```
 
 ## Development
 
@@ -32,7 +51,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/cron_record. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/anvox/cron_record. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 
@@ -40,4 +59,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the CronRecord project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/cron_record/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the CronRecord project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/anvox/cron_record/blob/master/CODE_OF_CONDUCT.md).
