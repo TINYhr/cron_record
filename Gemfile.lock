@@ -41,7 +41,7 @@ GEM
       byebug (~> 11.0)
       pry (~> 0.13.0)
     raabro (1.1.6)
-    rake (10.5.0)
+    rake (12.3.3)
     rspec (3.9.0)
       rspec-core (~> 3.9.0)
       rspec-expectations (~> 3.9.0)
@@ -71,7 +71,7 @@ DEPENDENCIES
   database_cleaner-active_record
   fugit
   pry-byebug
-  rake (~> 10.0)
+  rake (~> 12.3)
   rspec (~> 3.0)
   sqlite3
 
