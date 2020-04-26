@@ -27,7 +27,7 @@ RSpec.describe 'Cron model attribute accessor', verbose: true do
         between_date.day,
         between_date.hour,
         0,
-        0)
+        0).utc
       expect(subject.cron_match?(between_date)).to eq(fugit.match?(between_date))
     end
   end
