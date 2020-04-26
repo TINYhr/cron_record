@@ -2,6 +2,9 @@ require "bundler/setup"
 require "cron_record"
 require 'active_record'
 
+require 'database_cleaner/active_record'
+DatabaseCleaner.strategy = :truncation
+
 require 'pry-byebug' if ENV['DEBUG'] == '1'
 
 module CronRecordTestHelper
@@ -47,6 +50,8 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+
+  config.before { DatabaseCleaner.clean }
 end
 
 ActiveRecord::Base.establish_connection(
@@ -58,7 +63,7 @@ ActiveRecord::Base.establish_connection(
 ActiveRecord::Base.connection.execute('DROP TABLE IF EXISTS mock_model1s;')
 ActiveRecord::Base.connection.execute(<<~SQL)
   CREATE TABLE mock_model1s (
-    id                BIGINT PRIMARY KEY,
+    id                INTEGER PRIMARY KEY AUTOINCREMENT,
     cron_hour         BIGINT NOT NULL,
     cron_day          BIGINT NOT NULL,
     cron_month        BIGINT NOT NULL,

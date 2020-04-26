@@ -47,18 +47,27 @@ RSpec.describe 'Cron to DB' do
   end
 
   describe 'integrate with ActiveRecord' do
+    let(:test_time) { Time.new(2020, 1, 1, 0, 0, 0) }
+
     it 'has accessor' do
       host = MockModel1.new
       expect(host).to be
       expect(host.cron).to eq(nil)
 
       host.cron = '0 0 1 1 *'
-
       expect(host.cron).to eq('0 0 1 1 *')
+
+      expect(host.save).to eq(true)
+      expect(MockModel1.first).to eq(host)
     end
 
     it 'queried by time' do
-      pending('Implement !!!')
+      MockModel1.create!(cron: '0 0 1 1 *')
+      MockModel1.create!(cron: '0 0 2 1 *')
+
+      items = MockModel1.cron_execute_at(test_time).all
+      expect(items.size).to eq(1)
+      expect(items[0].cron).to eq('0 0 1 1 *')
     end
   end
 end
