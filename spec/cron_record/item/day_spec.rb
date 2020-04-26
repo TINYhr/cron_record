@@ -1,11 +1,11 @@
-RSpec.describe CronRecord::Hour do
+RSpec.describe CronRecord::Day do
   describe '.from_str' do
     context 'wildcard' do
       it 'return all bits' do
         subject = described_class.from_str('*')
 
         expect(subject.to_s).to eq('*')
-        expect(subject.to_bit).to eq(16777215) # all bits from 0->23
+        expect(subject.to_bit).to eq(4294967294) # all bits from 1->31
       end
     end
 
@@ -33,7 +33,7 @@ RSpec.describe CronRecord::Hour do
       context 'below range' do
         it 'raise error' do
           expect {
-            described_class.from_str('-1')
+            described_class.from_str('0')
           }.to raise_error(/Invalid/)
         end
       end
@@ -41,7 +41,7 @@ RSpec.describe CronRecord::Hour do
       context 'above range' do
         it 'raise error' do
           expect {
-            described_class.from_str('24')
+            described_class.from_str('32')
           }.to raise_error(/Invalid/)
         end
       end
@@ -59,10 +59,10 @@ RSpec.describe CronRecord::Hour do
   describe '.from_bits' do
     context 'wildcard' do
       it 'return all bits' do
-        subject = described_class.from_bits(16777215)
+        subject = described_class.from_bits(4294967294)
 
         expect(subject.to_s).to eq('*')
-        expect(subject.to_bit).to eq(16777215) # all bits from 0->23
+        expect(subject.to_bit).to eq(4294967294) # all bits from 1->32
       end
     end
 
@@ -90,7 +90,7 @@ RSpec.describe CronRecord::Hour do
       context 'below range' do
         it 'raise error' do
           expect {
-            described_class.from_bits(0)
+            described_class.from_bits(1)
           }.to raise_error(/Invalid/)
         end
       end
@@ -98,7 +98,7 @@ RSpec.describe CronRecord::Hour do
       context 'above range' do
         it 'raise error' do
           expect {
-            described_class.from_bits(16777216)
+            described_class.from_bits(4294967295)
           }.to raise_error(/Invalid/)
         end
       end

@@ -1,11 +1,11 @@
-RSpec.describe CronRecord::Hour do
+RSpec.describe CronRecord::DayOfWeek do
   describe '.from_str' do
     context 'wildcard' do
       it 'return all bits' do
         subject = described_class.from_str('*')
 
         expect(subject.to_s).to eq('*')
-        expect(subject.to_bit).to eq(16777215) # all bits from 0->23
+        expect(subject.to_bit).to eq(127) # all bits from 0->6
       end
     end
 
@@ -22,10 +22,10 @@ RSpec.describe CronRecord::Hour do
 
     context 'single' do
       it 'return single bit' do
-        subject = described_class.from_str('7')
+        subject = described_class.from_str('6')
 
-        expect(subject.to_s).to eq('7')
-        expect(subject.to_bit).to eq(128)
+        expect(subject.to_s).to eq('6')
+        expect(subject.to_bit).to eq(64)
       end
     end
 
@@ -41,7 +41,7 @@ RSpec.describe CronRecord::Hour do
       context 'above range' do
         it 'raise error' do
           expect {
-            described_class.from_str('24')
+            described_class.from_str('7')
           }.to raise_error(/Invalid/)
         end
       end
@@ -59,10 +59,10 @@ RSpec.describe CronRecord::Hour do
   describe '.from_bits' do
     context 'wildcard' do
       it 'return all bits' do
-        subject = described_class.from_bits(16777215)
+        subject = described_class.from_bits(127)
 
         expect(subject.to_s).to eq('*')
-        expect(subject.to_bit).to eq(16777215) # all bits from 0->23
+        expect(subject.to_bit).to eq(127) # all bits from 0->23
       end
     end
 
@@ -79,10 +79,10 @@ RSpec.describe CronRecord::Hour do
 
     context 'single' do
       it 'return single bit' do
-        subject = described_class.from_bits(128)
+        subject = described_class.from_bits(64)
 
-        expect(subject.to_s).to eq('7')
-        expect(subject.to_bit).to eq(128)
+        expect(subject.to_s).to eq('6')
+        expect(subject.to_bit).to eq(64)
       end
     end
 
@@ -98,7 +98,7 @@ RSpec.describe CronRecord::Hour do
       context 'above range' do
         it 'raise error' do
           expect {
-            described_class.from_bits(16777216)
+            described_class.from_bits(128)
           }.to raise_error(/Invalid/)
         end
       end
