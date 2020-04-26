@@ -1,5 +1,3 @@
-require 'fugit'
-
 RSpec.describe CronRecord::Model do
   describe '.from_*' do
     it "convert cron string to bit fields" do

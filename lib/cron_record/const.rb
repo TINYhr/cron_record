@@ -61,4 +61,10 @@ module CronRecord
     288230376151711744,
     576_460_752_303_423_488
   ].freeze
+
+  SUPPORTED_PRECISIONS = [
+    :hourly,
+    # :minute, # Not support yet
+    # :minutes5, # Not support yet
+  ]
 end

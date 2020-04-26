@@ -4,7 +4,7 @@ module CronRecord
   module ModelClassMethods
     def from_bit_fields(bit_fields)
       if bit_fields.size != 5
-        raise StandardError('Unsupport bit_fields length')
+        raise CronRecord::Error('Unsupport bit_fields length')
       end
 
       new(

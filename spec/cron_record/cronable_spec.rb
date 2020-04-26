@@ -4,6 +4,9 @@ class MockModel1 < ActiveRecord::Base
 end
 
 RSpec.describe CronRecord::Cronable do
+  before { DatabaseCleaner.clean }
+  after { DatabaseCleaner.clean }
+
   describe 'integrate with ActiveRecord' do
     it 'has accessor' do
       host = MockModel1.new

@@ -15,10 +15,20 @@ module CronRecord
     attr_reader :hour, :day, :month, :day_of_week
 
     def match?(at)
-      (BIT_CONVERT[at.hour] & @hour.to_bit) > 0 &&
-        (BIT_CONVERT[at.day] & @day.to_bit) > 0 &&
-        (BIT_CONVERT[at.month] & @month.to_bit) > 0 &&
-        (BIT_CONVERT[at.wday] & @day_of_week.to_bit) > 0
+      # TODO: [AV] !!! Need reflect to query
+      if !@day.is_all? && !@day_of_week.is_all?
+        ((BIT_CONVERT[at.hour] & @hour.to_bit) > 0 &&
+                  (BIT_CONVERT[at.day] & @day.to_bit) > 0 &&
+                  (BIT_CONVERT[at.month] & @month.to_bit) > 0) ||
+        ((BIT_CONVERT[at.hour] & @hour.to_bit) > 0 &&
+                  (BIT_CONVERT[at.month] & @month.to_bit) > 0 &&
+                  (BIT_CONVERT[at.wday] & @day_of_week.to_bit) > 0)
+      else
+        (BIT_CONVERT[at.hour] & @hour.to_bit) > 0 &&
+          (BIT_CONVERT[at.day] & @day.to_bit) > 0 &&
+          (BIT_CONVERT[at.month] & @month.to_bit) > 0 &&
+          (BIT_CONVERT[at.wday] & @day_of_week.to_bit) > 0
+      end
     end
 
     def to_attributes

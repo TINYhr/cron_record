@@ -3,8 +3,14 @@ module CronRecord
     def cronable(attr_name, **options)
       CronRecord.models << self
 
+      cron_precise = options[:precise] || :hourly
+      unless SUPPORTED_PRECISIONS.include?(cron_precise)
+        raise CronRecord::Error.new("Precise #{cron_precise} is not supported.")
+      end
+
       class_eval do
         class_variable_set :@@cron_attribute_name, attr_name
+        class_variable_set :@@cron_precise, cron_precise
 
         class << self
           def cron_execute_at(time_at)
@@ -46,6 +52,24 @@ module CronRecord
 
           @cron_item ||= CronRecord::Model.from_bit_fields(bit_fields)
           @cron_item.to_s
+        end
+
+        define_method("#{attr_name}_match?") do |value|
+          return false if attributes["#{attr_name}_hour"].nil? ||
+                        attributes["#{attr_name}_day"].nil? ||
+                        attributes["#{attr_name}_month"].nil? ||
+                        attributes["#{attr_name}_day_of_week"].nil?
+
+          bit_fields = [
+            0,
+            attributes["#{attr_name}_hour"],
+            attributes["#{attr_name}_day"],
+            attributes["#{attr_name}_month"],
+            attributes["#{attr_name}_day_of_week"]
+          ]
+
+          @cron_item ||= CronRecord::Model.from_bit_fields(bit_fields)
+          @cron_item.match?(value)
         end
       end
     end

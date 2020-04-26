@@ -1,20 +1,42 @@
 require "bundler/setup"
 require "cron_record"
-require 'active_record'
 
+# Test & integrate gems
+require 'active_record'
 require 'database_cleaner/active_record'
 DatabaseCleaner.strategy = :truncation
-
-require 'pry-byebug' if ENV['DEBUG'] == '1'
+require 'pry-byebug'
+require 'fugit'
 
 module CronRecordTestHelper
   HOURS         = (0..23).to_a + ['*']
   DAYS          = (1..31).to_a + ['*']
-  MONTHS        = (0..11).to_a + ['*']
+  MONTHS        = (1..12).to_a + ['*']
   DAYS_OF_WEEK  = (0..6).to_a + ['*']
 
   def self.random
     "0 #{HOURS.sample} #{DAYS.sample} #{MONTHS.sample} #{DAYS_OF_WEEK.sample}"
+  end
+
+  def self.all
+    DAYS_OF_WEEK.each do |day_of_week|
+      MONTHS.each do |month|
+        DAYS.each do |day|
+          if month != '*' && day != '*'
+            if (month == 2 && day > 29)
+              next
+            end
+            if [4, 6, 9, 11].include?(month) && day > 30
+              next
+            end
+          end
+
+          HOURS.each do |hour|
+            yield("0 #{hour} #{day} #{month} #{day_of_week}")
+          end
+        end
+      end
+    end
   end
 
   def self.sql_generator
@@ -50,8 +72,6 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
-
-  config.before { DatabaseCleaner.clean }
 end
 
 ActiveRecord::Base.establish_connection(
