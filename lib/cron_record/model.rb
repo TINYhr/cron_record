@@ -15,6 +15,7 @@ module CronRecord
     attr_reader :hour, :day, :month, :day_of_week
 
     def match?(at)
+      # TODO: [AV] !!! Make sure input are UTC
       # TODO: [AV] !!! Need reflect to query
       if !@day.is_all? && !@day_of_week.is_all?
         ((BIT_CONVERT[at.hour] & @hour.to_bit) > 0 &&
