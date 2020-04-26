@@ -6,7 +6,7 @@ module CronRecord
           self.range.to_a
         else
           item_str.split(',').map do |value|
-            value.strip.to_i.tap do |value_i|
+            Integer(value.strip).tap do |value_i|
               raise StandardError.new("Invalid #{self.name} value: [#{value_i}]") unless self.range.include?(value_i)
             end
           end
@@ -16,6 +16,11 @@ module CronRecord
       end
 
       def from_bits(item_bits)
+        item_bits = Integer(item_bits)
+        if item_bits <= 0
+          raise StandardError.new("Invalid #{self.name} value: #{item_bits}")
+        end
+
         i = 0
         data = []
         while item_bits > 0
@@ -26,6 +31,12 @@ module CronRecord
           item_bits = item_bits >> 1
           i += 1
         end
+
+        invalid_items = data - self.range.to_a
+        if invalid_items.size > 0
+          raise StandardError.new("Invalid #{self.name} value: #{invalid_items}")
+        end
+
 
         new(data)
       end
