@@ -16,7 +16,6 @@ module CronRecord
 
     def match?(at)
       # TODO: [AV] !!! Make sure input are UTC
-      # TODO: [AV] !!! Need reflect to query
       if !@day.is_all? && !@day_of_week.is_all?
         ((BIT_CONVERT[at.hour] & @hour.to_bit) > 0 &&
                   (BIT_CONVERT[at.day] & @day.to_bit) > 0 &&

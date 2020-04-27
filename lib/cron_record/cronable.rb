@@ -14,34 +14,40 @@ module CronRecord
 
         class << self
           def cron_execute_at(time_at)
-            parsed = [
-              0, # Minute
-              CronRecord::BIT_CONVERT[time_at.hour],
-              CronRecord::BIT_CONVERT[time_at.day],
-              CronRecord::BIT_CONVERT[time_at.month],
-              CronRecord::BIT_CONVERT[time_at.wday]
-            ]
-
-            # all_day = BIT_CONVERT[32] - 2 # start from 1
-            # all_day_of_week = BIT_CONVERT[7] - 1 # start from 0
-            # <<~SQL
-            #   WHERE (BIT_COUNT(hour & $hour) + BIT_COUNT(month & $month) = 2) AND
+            all_day = BIT_CONVERT[32] - 2 # start from 1
+            all_day_of_week = BIT_CONVERT[7] - 1 # start from 0
+            # query = <<~SQL
+            #   (BIT_COUNT(hour & :hour) + BIT_COUNT(month & :month) = 2) AND
             #   (
             #     (
-            #       $day <> ALL_DAY AND
-            #       $day_of_week <> ALL_DAY_OF_WEEK AND
-            #       (BIT_COUNT(day & $day) + BIT_COUNT(day_of_week & $day_of_week) >= 1)
+            #       day <> #{all_day} AND
+            #       day_of_week <> #{all_day_of_week} AND
+            #       (BIT_COUNT(day & :day) + BIT_COUNT(day_of_week & :day_of_week) >= 1)
             #     ) OR
             #     (
-            #       BIT_COUNT(day & $day) + BIT_COUNT(day_of_week & $day_of_week) = 2
+            #       BIT_COUNT(day & :day) + BIT_COUNT(day_of_week & :day_of_week) = 2
             #     )
             #   )
             # SQL
+            query = <<~SQL
+              ((cron_hour & :hour >= 1) AND (cron_month & :month >= 1)) AND
+              (
+                (
+                  cron_day <> #{all_day} AND
+                  cron_day_of_week <> #{all_day_of_week} AND
+                  ((cron_day & :day >= 1) OR (cron_day_of_week & :day_of_week >= 1))
+                ) OR
+                (
+                  (cron_day & :day >= 1) AND (cron_day_of_week & :day_of_week >= 1)
+                )
+              )
+            SQL
 
-            where("(#{class_variable_get(:@@cron_attribute_name)}_hour & ?) > 0", parsed[1])
-              .where("(#{class_variable_get(:@@cron_attribute_name)}_month & ?) > 0", parsed[3])
-              .where("(#{class_variable_get(:@@cron_attribute_name)}_day & ?) > 0", parsed[2])
-              .where("(#{class_variable_get(:@@cron_attribute_name)}_day_of_week & ?) > 0", parsed[4])
+            where(query,
+                  hour: CronRecord::BIT_CONVERT[time_at.hour],
+                  day: CronRecord::BIT_CONVERT[time_at.day],
+                  month: CronRecord::BIT_CONVERT[time_at.month],
+                  day_of_week: CronRecord::BIT_CONVERT[time_at.wday])
           end
         end
 

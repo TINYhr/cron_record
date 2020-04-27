@@ -19,6 +19,7 @@ RSpec.describe 'Cron model attribute accessor', verbose: true do
 
         fugit = Fugit::Cron.parse("#{cron} UTC")
         expect(subject.cron_match?(fugit.next_time.utc)).to eq(true)
+        expect(AttributeTest::MockModel1.cron_execute_at(fugit.next_time.utc).where(id: subject.id).exists?).to eq(true)
 
         between_date = fugit.previous_time + ((fugit.next_time - fugit.previous_time) / 2)
         # Eliminate minute difference in hourly, next_time and previous_time are continuously
@@ -30,15 +31,6 @@ RSpec.describe 'Cron model attribute accessor', verbose: true do
           0,
           0).utc
         expect(subject.cron_match?(between_date)).to eq(fugit.match?(between_date))
-      end
-    end
-  end
-
-  describe 'Query cron' do
-    AttributeTest::MockModel1.find_each do |subject|
-      describe "query cron [#{subject.cron}]" do
-        fugit = Fugit::Cron.parse("#{subject.cron} UTC")
-        expect(AttributeTest::MockModel1.cron_execute_at(fugit.next_time).where(id: subject.id).exists?).to eq(true)
       end
     end
   end
