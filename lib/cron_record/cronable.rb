@@ -22,9 +22,25 @@ module CronRecord
               CronRecord::BIT_CONVERT[time_at.wday]
             ]
 
+            # all_day = BIT_CONVERT[32] - 2 # start from 1
+            # all_day_of_week = BIT_CONVERT[7] - 1 # start from 0
+            # <<~SQL
+            #   WHERE (BIT_COUNT(hour & $hour) + BIT_COUNT(month & $month) = 2) AND
+            #   (
+            #     (
+            #       $day <> ALL_DAY AND
+            #       $day_of_week <> ALL_DAY_OF_WEEK AND
+            #       (BIT_COUNT(day & $day) + BIT_COUNT(day_of_week & $day_of_week) >= 1)
+            #     ) OR
+            #     (
+            #       BIT_COUNT(day & $day) + BIT_COUNT(day_of_week & $day_of_week) = 2
+            #     )
+            #   )
+            # SQL
+
             where("(#{class_variable_get(:@@cron_attribute_name)}_hour & ?) > 0", parsed[1])
-              .where("(#{class_variable_get(:@@cron_attribute_name)}_day & ?) > 0", parsed[2])
               .where("(#{class_variable_get(:@@cron_attribute_name)}_month & ?) > 0", parsed[3])
+              .where("(#{class_variable_get(:@@cron_attribute_name)}_day & ?) > 0", parsed[2])
               .where("(#{class_variable_get(:@@cron_attribute_name)}_day_of_week & ?) > 0", parsed[4])
           end
         end
