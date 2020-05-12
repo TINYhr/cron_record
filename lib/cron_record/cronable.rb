@@ -16,6 +16,8 @@ module CronRecord
           def cron_execute_at(time_at)
             all_day = BIT_CONVERT[32] - 2 # start from 1
             all_day_of_week = BIT_CONVERT[7] - 1 # start from 0
+            cron_attr = class_variable_get(:@@cron_attribute_name)
+
             # query = <<~SQL
             #   (BIT_COUNT(hour & :hour) + BIT_COUNT(month & :month) = 2) AND
             #   (
@@ -30,15 +32,15 @@ module CronRecord
             #   )
             # SQL
             query = <<~SQL
-              ((cron_hour & :hour >= 1) AND (cron_month & :month >= 1)) AND
+              ((#{cron_attr}_hour & :hour >= 1) AND (#{cron_attr}_month & :month >= 1)) AND
               (
                 (
-                  cron_day <> #{all_day} AND
-                  cron_day_of_week <> #{all_day_of_week} AND
-                  ((cron_day & :day >= 1) OR (cron_day_of_week & :day_of_week >= 1))
+                  #{cron_attr}_day <> #{all_day} AND
+                  #{cron_attr}_day_of_week <> #{all_day_of_week} AND
+                  ((#{cron_attr}_day & :day >= 1) OR (#{cron_attr}_day_of_week & :day_of_week >= 1))
                 ) OR
                 (
-                  (cron_day & :day >= 1) AND (cron_day_of_week & :day_of_week >= 1)
+                  (#{cron_attr}_day & :day >= 1) AND (#{cron_attr}_day_of_week & :day_of_week >= 1)
                 )
               )
             SQL
