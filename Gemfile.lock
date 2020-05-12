@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cron_record (0.1.0)
+    cron_record (0.0.1)
 
 GEM
   remote: https://rubygems.org/
