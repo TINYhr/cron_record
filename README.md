@@ -48,6 +48,10 @@ MockModel1.cron_execute_at(moment).all
 #=> a
 ```
 
+## Testing
+
+Currently, cron_record doesn't fully support all cron functions. But for the supported cron subset, it must be correct. I use `fugit` to verify it. [Attribute tests](spec/integrate/attribute_spec.rb) is built to scan through all possible supported cron string, and make sure it match with fugit.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
