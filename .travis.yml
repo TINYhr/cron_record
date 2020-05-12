@@ -1,7 +1,15 @@
----
 sudo: false
 language: ruby
 cache: bundler
 rvm:
-  - 2.6.6
+- 2.6.6
 before_install: gem install bundler -v 2.1.4
+deploy:
+  provider: rubygems
+  api_key:
+    secure: v6MtPYD6bYvtw4GkIyNbNxVlj0qUoYLWPW3w5JuU/8W0fAmTc0IjGaZHZR36ZwnNo2IwgfzNBQDWbBfRQOMJL1iBnxhrojaATlSgJAew72NDx4e3+HLY6wAiFvFbJztRuQx/c1d9KHTfWfW+TU1FCst36RamG0bOsk9TkxhyGVq5SVrcQh4VhecIBIB52omUywLYNBYoYqTAFM281UALEj7TceybtaGbWqGKmUAL2fmUaIElRv6DTrRajPJ/vnoeVAUSFhu/sWzieVOr9w5Nfom7zljludzUf5hU914bnCRMASkwUOekT7tP5+3b6LxhLB1x5CzVfD0gng5eYO9oMIbKck55iRAQxHzOyJh/0WLpADBB95HDdlwR5CxlU9hXlzmIFgIayCL6f3XyTK7oD0d8d+VNJn3cwUqJYlz9Tq4dCbqEEZ/jAYWWNUJIGcUdHWKZzjPzJx7VRSEL2Q/x8BcCUszZ1DJZqQGphtvHR9OZ5tq70Q5oA5FQumb5Fr/8fLBsfIPlEqakFcT4A6ZR6VAQCLt9fGqHJ0jsIhqCBvm7xNqy+22OwsE/UVkpskXI5lGnfCo79/22coHEMhKazOnSrtaPVPlivEnf3ooQ8tPrOhKJ9hxrywrZyCHlL7T4ydQxQEdT93+vZEouturaBNVuVTRQkYzKh7xYEhTw9Vs=
+  gem: cron_record
+  on:
+    tags: true
+    repo: anvox/cron_record
+  skip_cleanup: 'true'

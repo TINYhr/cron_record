@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/anvox/cron_record.svg?branch=master)](https://travis-ci.org/anvox/cron_record)
 
+# Disclaim
+__This project is still in beta stage__
 
 # CronRecord
 
