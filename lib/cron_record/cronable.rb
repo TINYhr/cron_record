@@ -54,9 +54,12 @@ module CronRecord
         end
 
         define_method("#{attr_name}=") do |value|
-          @cron_item ||= CronRecord::Model.from_cron_string(value)
-
-          assign_attributes(@cron_item.to_attributes.transform_keys { |key| "#{attr_name}_#{key}" })
+          CronRecord::Model.from_cron_string(value)
+                           .to_attributes
+                           .transform_keys { |key| "#{attr_name}_#{key}" }
+                           .each do |key, value|
+                             write_attribute(key, value)
+                           end
           value
         end
 
@@ -74,8 +77,7 @@ module CronRecord
             attributes["#{attr_name}_day_of_week"]
           ]
 
-          @cron_item ||= CronRecord::Model.from_bit_fields(bit_fields)
-          @cron_item.to_s
+          CronRecord::Model.from_bit_fields(bit_fields).to_s
         end
 
         define_method("#{attr_name}_match?") do |value|
